@@ -51,6 +51,16 @@ async def register_name(message: Message, state: FSMContext):
 
 @router.message(Register.age)
 async def register_name(message: Message, state: FSMContext):
-    await state.update_data(name=message.text)
+    await state.update_data(age=message.text)
     await state.set_state(Register.phone)
-    await message.answer("Enter your phone")
+    await message.answer("Enter your phone", reply_markup=kb.get_phone)
+
+
+@router.message(Register.phone, F.contact)
+async def register_phone(message: Message, state: FSMContext):
+    await state.update_data(phone=message.contact.phone_number)
+    data = await state.get_data()
+    await message.answer(
+        f"Your name: {data['name']}\n Your age: {data['age']}\n Your phone: {data['phone']}"
+    )
+    await state.clear()

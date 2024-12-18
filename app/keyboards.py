@@ -25,3 +25,8 @@ catalog = InlineKeyboardMarkup(
         [InlineKeyboardButton(text="Filters", callback_data="filters")],
     ]
 )
+
+get_phone = ReplyKeyboardMarkup(
+    keyboard=[[KeyboardButton(text="Send phone", request_contact=True)]],
+    resize_keyboard=True,
+)
