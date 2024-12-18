@@ -1,10 +1,18 @@
 from aiogram import F, Router
 from aiogram.filters import CommandStart, Command
-from aiogram.types import Message
+from aiogram.types import Message, CallbackQuery
+from aiogram.fsm.state import State, StatesGroup
+from aiogram.fsm.context import FSMContext
 
 import app.keyboards as kb
 
 router = Router()
+
+
+class Register(StatesGroup):
+    name = State()
+    age = State()
+    phone = State()
 
 
 @router.message(CommandStart())
@@ -20,3 +28,29 @@ async def cmd_help(message: Message):
 @router.message(F.text == "Catalog")
 async def catalog(message: Message):
     await message.answer("Select product category", reply_markup=kb.catalog)
+
+
+@router.callback_query(F.data == "oil")
+async def oil(callback: CallbackQuery):
+    await callback.answer("You have selected category")
+    await callback.message.answer("You have selected oil category")
+
+
+@router.message(Command("register"))
+async def register(message: Message, state: FSMContext):
+    await state.set_state(Register.name)
+    await message.answer("Enter your username")
+
+
+@router.message(Register.name)
+async def register_name(message: Message, state: FSMContext):
+    await state.update_data(name=message.text)
+    await state.set_state(Register.age)
+    await message.answer("Enter your age")
+
+
+@router.message(Register.age)
+async def register_name(message: Message, state: FSMContext):
+    await state.update_data(name=message.text)
+    await state.set_state(Register.phone)
+    await message.answer("Enter your phone")
