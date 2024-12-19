@@ -5,6 +5,7 @@ from aiogram.fsm.state import State, StatesGroup
 from aiogram.fsm.context import FSMContext
 
 import app.keyboards as kb
+import app.database.requests as rq
 
 router = Router()
 
@@ -17,7 +18,8 @@ class Register(StatesGroup):
 
 @router.message(CommandStart())
 async def cmd_start(message: Message):
-    await message.answer("Hello", reply_markup=kb.main)
+    await rq.set_user(message.from_user.id)
+    await message.answer("Welcome to our store", reply_markup=kb.main)
 
 
 @router.message(Command("help"))

@@ -233,3 +233,4 @@ package-lock.json
 .yarn/
 .pnp.*
 /.env
+/identifier.sqlite
